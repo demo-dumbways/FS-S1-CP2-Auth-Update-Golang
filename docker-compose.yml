@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+        ebook:
+             build: .
+             container_name: fs-s1-cp2-auth
+             image: registry.mejik.xyz/ebook/fs-s1-cp2-auth
+             ports:
+                     - 3027:3000
