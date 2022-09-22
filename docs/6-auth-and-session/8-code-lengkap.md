@@ -2,7 +2,7 @@
 sidebar_position: 8
 ---
 
-# 8. Full Code Index.JS
+# 8. Full Code main.go
 Berikut adalah Full Code pada file `main.go` :
 
 <a class="btn-example-code" href="">
