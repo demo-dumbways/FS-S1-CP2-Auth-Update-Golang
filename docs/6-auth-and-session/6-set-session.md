@@ -8,67 +8,58 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 **Session** digunakan untuk menyimpan data semetara ke dalam variabel session itu sendiri, sehingga data yang tersimpan pada session dapat digunakan untuk keperluan tertentu, misal untuk keperluan Login. Selain itu nilai dari variable session ini dapat digunakan pada halaman mana saja `(across multiple pages)`
 
-Ketika kita ingin menggunakan session di express.js maka kita perlu menginstall terlebih dahulu package `express-session`. Menginstall package ini akan kita lakukan menggunakan NPM.
+pastikan package gorilla/session sudah kita import dan gunakan didalam file entry point kita yakni main.go
 
-```shell
-npm install express-session
-```
+setelah kita import package gorilla/session, selanjutnya kita tambahkan code dibagian route `/login`untuk membuat session pada proses login
 
-selanjutnya package express-session akan kita import dan gunakan didalam file entry point kita yakni index.js
-
-```js title=index.js {3}
-const bcrypt = require('bcrypt');
-const flash = require('express-flash')
-const session = require('express-session')
-
-const db = require(path.join(__dirname, '../connection/db'));
-```
-
-setelah kita import package express-session, selanjutnya kita tambahkan code dibagian route `/login`untuk membuat session pada proses login
-
-<a class="btn-example-code" href="https://github.com/demo-dumbways/ebook-code-result-chapter-2/blob/day6-7.set-session/api/index.js">
+<a class="btn-example-code" href="">
 Contoh code
 </a>
 
 <br />
 <br />
 
-```js {17-32}
-app.post('/login', function(req, res){
-    const { email, password } = req.body
+ ```go title="main.go" {32-34}    
+    // this code continue from above
+    func login(w http.ResponseWriter, r *http.Request) {
+        err := r.ParseForm()
+        if err != nil {
+            log.Fatal(err)
+        }
 
-    let query = `SELECT * FROM tb_user WHERE email = '${email}'`
+        email := r.PostForm.Get("email")
+        password := r.PostForm.Get("password")
 
-    db.connect(function(err,client,done){
-        if (err) throw err
+        user := User{}
 
-        client.query(query, function(err,result){
-            if (err) throw err
+        err = connection.Conn.QueryRow(context.Background(), "SELECT * FROM users WHERE email=$1", email).Scan(
+            &user.Id, &user.Name, &user.Email, &user.Password,
+        )
+        if err != nil {
+            w.WriteHeader(http.StatusBadRequest)
+            w.Write([]byte("message : " + err.Error()))
+            return
+	    }
 
-            if(result.rows.length == 0){
-                req.flash('danger',"Email & Password don't match!")
-                return res.redirect('/login')
-            }
+        err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+        if err != nil {
+            w.WriteHeader(http.StatusBadRequest)
+            w.Write([]byte("message : " + err.Error()))
+            return
+        }
 
-            let isMatch = bcrypt.compareSync(password, result.rows[0].password)
+        var store = sessions.NewCookieStore([]byte("SESSION_ID"))
+	    session, _ := store.Get(r, "SESSION_ID")
+        
+        session.Values["IsLogin"] = true
+	    session.Values["Name"] = user.Name
+	    session.Options.MaxAge = 10800 
 
-            if(isMatch){
-                req.session.isLogin = true
-                req.session.user = {
-                    id: result.rows[0].id,
-                    name: result.rows[0].name,
-                    email: result.rows[0].email
-                }
+        session.AddFlash("Login success", "message")
+        session.Save(r, w)
 
-                req.flash('success', "Login success")
-                res.redirect('/blog')
-            } else {
-                req.flash('danger', "Email & Password don't match!")
-                res.redirect('/login')
-            }
-        })
-    })
-})
-```
+        http.Redirect(w, r, "/home", http.StatusMovedPermanently)
+    }
+``` 
 
 <img alt="image1" src={useBaseUrl('img/docs/image-6-6.png')}/>

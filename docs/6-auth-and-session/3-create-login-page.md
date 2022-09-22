@@ -6,16 +6,16 @@ sidebar_position: 3
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-Membuat halaman login kita bisa memanfaatkan code html dan css yang ada pada pertemuan sebelumnya terkait form contact me. Sehingga kita bisa berfokus pada penggunaan javascript untuk mengolah data login dan memvalidasi apakah terdapat data user yang diinputkan didalam database.
+Membuat halaman login kita bisa memanfaatkan code html dan css yang ada pada pertemuan sebelumnya terkait form contact me. Sehingga kita bisa berfokus pada penggunaan golang untuk mengolah data login dan memvalidasi apakah terdapat data user yang diinputkan didalam database.
 
-<a class="btn-example-code" href="https://github.com/demo-dumbways/ebook-code-result-chapter-2/blob/day6-2.login-page/views/login.hbs">
+<a class="btn-example-code" href="">
 Contoh code 
 </a>
 
 <br />
 <br />
 
-```html title="login.hbs"
+```html title="login.html"
 <html>
 
 <head>
@@ -103,7 +103,7 @@ Contoh code
 <br />
 
 <div>
-<a class="btn-demo" href="https://personal-web-chapter-2.herokuapp.com/login">
+<a class="btn-demo" href="">
 Demo
 </a>
 </div>

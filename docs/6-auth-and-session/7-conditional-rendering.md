@@ -17,51 +17,83 @@ Contoh code
 <br />
 <br />
 
-```js {23}
-// this code below endpoint app.get('/home' .....
-app.get('/blog', function (req, res) {
-  db.connect(function(err, client, done){
-    if (err) throw err
-      
-      let query = "SELECT tb_blog.id, tb_blog.title, tb_blog.content, tb_blog.post_date, name FROM tb_blog, tb_user WHERE tb_user.id = tb_blog.author"
+```go title="main.go" {15-23,40-44}
+// .............
+// continuation this code same like before 
+// .............
 
-        client.query(query, function(err,result){
-        if (err) throw err
-            let data = result.rows
+func blogs(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-            data = data.map(function(blog){
-                return {
-                    ...blog,
-                    post_at: getFullTime(blog.post_at),
-                    post_age: getDistanceTime(blog.post_at)
-                }
-            })
+	var tmpl, err = template.ParseFiles("views/blog.html")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("message : " + err.Error()))
+		return
+	}
 
-            res.render('blog', 
-                { 
-                    blogs: data,
-                    isLogin: req.session.isLogin,
-                    user: req.session.user
-                })
-        })
-    })
-})
+	var store = sessions.NewCookieStore([]byte("SESSION_ID"))
+	session, _ := store.Get(r, "SESSION_ID")
+
+	if session.Values["IsLogin"] != true {
+		Data.IsLogin = false
+	} else {
+		Data.IsLogin = session.Values["IsLogin"].(bool)
+		Data.UserName = session.Values["Name"].(string)
+	}
+
+	rows, _ := connection.Conn.Query(context.Background(), "SELECT id, title, image, content, post_at FROM blog ORDER BY id DESC")
+
+	var result []Blog
+	for rows.Next() {
+		var each = Blog{}
+
+		var err = rows.Scan(&each.Id, &each.Title, &each.Image, &each.Content, &each.Post_date)
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+		each.Author = "Ilham Fathullah"
+		each.Format_date = each.Post_date.Format("2 January 2006")
+
+		if session.Values["IsLogin"] != true {
+			each.IsLogin = false
+		} else {
+			each.IsLogin = session.Values["IsLogin"].(bool)
+		}
+
+		result = append(result, each)
+	}
+
+	respData := map[string]interface{}{
+		"Data":  Data,
+		"Blogs": result,
+	}
+
+	w.WriteHeader(http.StatusOK)
+	tmpl.Execute(w, respData)
+}
+
+// .............
+// continuation this code same like before 
+// .............
 ```
 
 Selanjutnya kita akan melakukan proses pengecekan apakah pengguna memiliki session ketika mengakses halaman blog, jika memiliki session maka button akan ditampilkan
 
-<a class="btn-example-code" href="https://github.com/demo-dumbways/ebook-code-result-chapter-2/blob/day6-8.conditional-rendering/views/blog.hbs">
+<a class="btn-example-code" href="">
 Contoh code
 </a>
 
 <br />
 <br />
 
-```html title=blog.hbs {50-54}
+```html title=blog.html {31-45,57-61,69-74}
 <html>
 
 <head>
-  <title>Creating Blog Page</title>
+  <title>{{.Data.Title}}</title>
   <link rel="stylesheet" href="/public/style.css" />
   <!-- linking boostrap css cdn  -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -71,35 +103,42 @@ Contoh code
 <body>
   <!-- NavBar -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container">
-      <a class="navbar-brand" href="/home">
-        <img src="public/assets/logo.png">
+    <div class="container-lg">
+      <a class="navbar-brand me-5" href="/home">
+        <img src="/public/assets/logo.png" alt="logo" />
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/home">Home</a>
+            <a class="nav-link" href="/home">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/blog">Blog</a>
+            <a href="/blog" class="nav-link list-active">Blog</a>
           </li>
         </ul>
-
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+      </div>
+      <!-- add auth link -->
+      <div class="d-flex pe-2 ">
+        <ul class="navbar-nav">
+          {{if .Data.IsLogin}}
           <li class="nav-item">
-            <a class="nav-link active  text-orange" aria-current="page" href="/register">Register</a>
+            <a href="#" class="nav-link">Hello, {{.Data.UserName}} </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/login">Login</a>
+            <a href="/logout" class="nav-link list-active">Logout</a>
           </li>
+          {{else}}
+          <li class="nav-item">
+            <a href="/register" class="nav-link">Register</a>
+          </li>
+          <li class="nav-item">
+            <a href="/login" class="nav-link">Login</a>
+          </li>
+          {{end}}
         </ul>
-
-        <a href="/contact-me" class="btn btn-orange text-white px-4 ms-5">Contact Me</a>
+      </div>
+      <div class="d-flex contact-me">
+        <a href="/contact-me"> Contact Me </a>
       </div>
     </div>
   </nav>
@@ -107,33 +146,38 @@ Contoh code
   <!-- Blog list -->
   <div id="contents" class="blog-list">
     <!-- conditional post blog -->
-    {{#if isLogin}}
+    {{if .Data.IsLogin}}
     <div class="button-group w-100">
       <a href="/add-blog" class="btn-post">Add New Blog</a>
     </div>
-    {{/if}}
+    {{end}}
     <!-- dynamic content would be here -->
-    <!-- using each expression to iterate blogs data sent -->
-    {{#each blogs}}
+    {{range $index, $data := .Blogs}}
     <div class="blog-list-item">
       <div class="blog-image">
         <img src="/public/assets/blog-img.png" alt="Pasar Coding di Indonesia Dinilai Masih Menjanjikan" />
       </div>
       <div class="blog-content">
+        {{if $data.IsLogin}}
         <div class="button-group">
-          <a href="/update-blog/{{this.id}}" class="btn-edit">Edit Post</a>
-          <a href="/delete-blog/{{this.id}}" class="btn-post">Delete Blog</a>
+          <a class="btn-edit">Edit Post</a>
+          <a class="btn-post" href="/delete-blog/{{$data.Id}}">Delete Blog</a>
         </div>
+        {{end}}
         <h1>
-          <a href="/blog/{{this.id}}" target="_blank">{{this.title}}</a>
+          <a href="/blog/{{$data.Id}}" target="_blank">
+            {{$data.Title}}
+          </a>
         </h1>
         <div class="detail-blog-content">
-          {{this.post_date}} | {{this.author}}
+          {{$data.Format_date}} | {{$data.Author}}
         </div>
-        <p>{{this.content}}</p>
+        <p>
+          {{$data.Content}}
+        </p>
       </div>
     </div>
-    {{/each}}
+    {{end}}
   </div>
 </body>
 

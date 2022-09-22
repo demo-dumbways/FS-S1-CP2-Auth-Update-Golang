@@ -6,16 +6,16 @@ sidebar_position: 2
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-Membuat halaman registrasi kita bisa memanfaatkan code html dan css yang ada pada pertemuan sebelumnya terkait form contact me. Sehingga kita bisa berfokus pada penggunaan javascript untuk mengolah data registrasi dan menyimpannya kedalam database.
+Membuat halaman registrasi kita bisa memanfaatkan code html dan css yang ada pada pertemuan sebelumnya terkait form contact me. Sehingga kita bisa berfokus pada penggunaan golang untuk mengolah data registrasi dan menyimpannya kedalam database.
 
-<a class="btn-example-code" href="https://github.com/demo-dumbways/ebook-code-result-chapter-2/blob/day6-1.register-page/views/register.hbs">
+<a class="btn-example-code" href="">
 Contoh code
 </a>
 
 <br />
 <br />
 
-```html title="register.hbs"
+```html title="register.html"
 <html>
     <head>
         <title>Register</title>
@@ -96,7 +96,7 @@ Contoh code
 <br />
 
 <div>
-<a class="btn-demo" href="https://personal-web-chapter-2.herokuapp.com/register">
+<a class="btn-demo" href="">
 Demo
 </a>
 </div>
