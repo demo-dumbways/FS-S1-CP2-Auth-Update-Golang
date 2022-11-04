@@ -12,7 +12,7 @@ pastikan package gorilla/session sudah kita import dan gunakan didalam file entr
 
 setelah kita import package gorilla/session, selanjutnya kita tambahkan code dibagian route `/login`untuk membuat session pada proses login
 
-<a class="btn-example-code" href="">
+<a class="btn-example-code" href="https://github.com/demo-dumbways/ebook-code-result-chapter-2-golang/blob/day6-5-set-session/main.go">
 Contoh code
 </a>
 

@@ -8,7 +8,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 Membuat halaman login kita bisa memanfaatkan code html dan css yang ada pada pertemuan sebelumnya terkait form contact me. Sehingga kita bisa berfokus pada penggunaan golang untuk mengolah data login dan memvalidasi apakah terdapat data user yang diinputkan didalam database.
 
-<a class="btn-example-code" href="">
+<a class="btn-example-code" href="https://github.com/demo-dumbways/ebook-code-result-chapter-2-golang/blob/day6-2-login-page/views/login.html">
 Contoh code 
 </a>
 
@@ -19,10 +19,10 @@ Contoh code
 <html>
 
 <head>
-    <title>Register</title>
+    <title>Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link href="public/style.css" rel="stylesheet">
+    <link href="/public/style.css" rel="stylesheet">
 </head>
 
 <body>
@@ -31,7 +31,7 @@ Contoh code
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand" href="/home">
-                <img src="public/assets/logo.png">
+                <img src="/public/assets/logo.png">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"

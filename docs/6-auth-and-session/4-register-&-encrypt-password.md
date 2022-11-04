@@ -12,11 +12,6 @@ Ketika kita ingin melakukan proses registrasi, terdapat 2 langkah yang harus dil
 
     Hal pertama yang dilakukan adalah membuat route dengan metode `GET` untuk merender view form register. Route ini akan kita berikan endpoint `/register` sesuai dengan tujuannya yakni menampilkan halaman register
 
-    <a class="btn-example-code" href="https://github.com/demo-dumbways/ebook-code-result-chapter-2/blob/day6-3.get-register/api/index.js">
-    Contoh code
-    </a>
-
-    <br />
     <br />
 
     ```go title="main.go" {23,33-45}
@@ -49,7 +44,7 @@ Ketika kita ingin melakukan proses registrasi, terdapat 2 langkah yang harus dil
     }
 
     // .............
-    // continuation this code same like before 
+    // continuation this code same like before
     // .............
 
     func formRegister(w http.ResponseWriter, r *http.Request) {
@@ -67,10 +62,9 @@ Ketika kita ingin melakukan proses registrasi, terdapat 2 langkah yang harus dil
     }
 
     // .............
-    // continuation this code same like before 
+    // continuation this code same like before
     // .............
     ```
-
 
 2.  Membuat Route untuk Menangani Proses Register
 
@@ -107,15 +101,15 @@ Ketika kita ingin melakukan proses registrasi, terdapat 2 langkah yang harus dil
     }
 
     // .............
-    // continuation this code same like before 
+    // continuation this code same like before
     // .............
     ```
 
     Sama dengan proses add blog post, hal pertama yang kita lakukan setelah membuat route untuk menyimpan data kedalam database. Proses menampung data inputan.
 
-    ```go title="main.go" {5-13}    
+    ```go title="main.go" {5-13}
     // .............
-    // continuation this code same like before 
+    // continuation this code same like before
     // .............
 
     func register(w http.ResponseWriter, r *http.Request) {
@@ -129,7 +123,7 @@ Ketika kita ingin melakukan proses registrasi, terdapat 2 langkah yang harus dil
     }
 
     // .............
-    // continuation this code same like before 
+    // continuation this code same like before
     // .............
     ```
 
@@ -143,7 +137,7 @@ Ketika kita ingin melakukan proses registrasi, terdapat 2 langkah yang harus dil
 
     kita akan menggunakan `method GenerateFromPassword` yang disediakan oleh package bcrypt untuk melakukan enkripsi password yang telah kita tampung dari form register
 
-    ```go title="main.go" {11-12} 
+    ```go title="main.go" {11-12}
     // this code continue from above
     func register(w http.ResponseWriter, r *http.Request) {
         err := r.ParseForm()
@@ -155,20 +149,20 @@ Ketika kita ingin melakukan proses registrasi, terdapat 2 langkah yang harus dil
         email := r.PostForm.Get("email")
 
         password := r.PostForm.Get("password")
-	    passwordHash, _ := bcrypt.GenerateFromPassword([]byte(password), 10)
+        passwordHash, _ := bcrypt.GenerateFromPassword([]byte(password), 10)
     }
     ```
 
     proses terakhir adalah kita simpan seluruh data registrasi beserta password yang telah di enkripsi kedalam database menggunakan query `INSERT`
 
-    <a class="btn-example-code" href="">
+    <a class="btn-example-code" href="https://github.com/demo-dumbways/ebook-code-result-chapter-2-golang/blob/day6-3-register-and-encrypt-password/main.go">
     Contoh code
     </a>
 
     <br />
     <br />
 
-    ```go title="main.go" {13-20} 
+    ```go title="main.go" {13-20}
     func register(w http.ResponseWriter, r *http.Request) {
         err := r.ParseForm()
         if err != nil {
@@ -179,9 +173,9 @@ Ketika kita ingin melakukan proses registrasi, terdapat 2 langkah yang harus dil
         email := r.PostForm.Get("email")
 
         password := r.PostForm.Get("password")
-	    passwordHash, _ := bcrypt.GenerateFromPassword([]byte(password), 10)
+        passwordHash, _ := bcrypt.GenerateFromPassword([]byte(password), 10)
 
-        _, err = connection.Conn.Exec(context.Background(), "INSERT INTO users(name, email,password) VALUES ($1,$2,$3)", name, email, passwordHash)
+        _, err = connection.Conn.Exec(context.Background(), "INSERT INTO tb_user(name, email,password) VALUES ($1,$2,$3)", name, email, passwordHash)
         if err != nil {
             w.WriteHeader(http.StatusInternalServerError)
             w.Write([]byte("message : " + err.Error()))

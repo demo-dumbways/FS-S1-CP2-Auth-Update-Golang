@@ -12,11 +12,6 @@ Ketika kita ingin melakukan proses login, terdapat 2 langkah yang harus dilakuka
 
     Hal pertama yang dilakukan adalah membuat route dengan metode `GET` untuk merender view form login. Route ini akan kita berikan endpoint `/login` sesuai dengan tujuannya yakni menampilkan halaman login
 
-    <a class="btn-example-code" href="">
-    Contoh code
-    </a>
-
-    <br />
     <br />
 
     ```go title="main.go" {26,36-48}
@@ -140,7 +135,7 @@ Ketika kita ingin melakukan proses login, terdapat 2 langkah yang harus dilakuka
 
     Kita akan melakukan query `SELECT` dengan tujuan mengecek apakah didalam database terdapat data yang ber emailkan sama dengan data email yang didapat dari form login. Proses ini kita lanjutkan dengan melakukan kondisi apabila tidak ada data yang ditemukan didalam database, maka akan kita tampilkan pesan error. Selain itu, kita juga menyiapkan sebuah struct untuk menampung data user dari hasil query
 
-    ```go title="main.go" {13-20}    
+    ```go title="main.go" {5-10,26-35}    
     // .............
     // continuation this code same like before 
     // .............
@@ -168,7 +163,7 @@ Ketika kita ingin melakukan proses login, terdapat 2 langkah yang harus dilakuka
 
         user := User{}
 
-        err = connection.Conn.QueryRow(context.Background(), "SELECT * FROM users WHERE email=$1", email).Scan(
+        err = connection.Conn.QueryRow(context.Background(), "SELECT * FROM tb_user WHERE email=$1", email).Scan(
             &user.Id, &user.Name, &user.Email, &user.Password,
         )
         if err != nil {
@@ -194,7 +189,7 @@ Ketika kita ingin melakukan proses login, terdapat 2 langkah yang harus dilakuka
 
         user := User{}
 
-        err = connection.Conn.QueryRow(context.Background(), "SELECT * FROM users WHERE email=$1", email).Scan(
+        err = connection.Conn.QueryRow(context.Background(), "SELECT * FROM tb_user WHERE email=$1", email).Scan(
             &user.Id, &user.Name, &user.Email, &user.Password,
         )
         if err != nil {
@@ -221,7 +216,7 @@ Ketika kita ingin melakukan proses login, terdapat 2 langkah yang harus dilakuka
     ```
     <br/>
 
-    <a class="btn-example-code" href="">
+    <a class="btn-example-code" href="https://github.com/demo-dumbways/ebook-code-result-chapter-2-golang/blob/day6-4-login/main.go">
     Contoh code
     </a>
 
@@ -241,7 +236,7 @@ Ketika kita ingin melakukan proses login, terdapat 2 langkah yang harus dilakuka
 
         user := User{}
 
-        err = connection.Conn.QueryRow(context.Background(), "SELECT * FROM users WHERE email=$1", email).Scan(
+        err = connection.Conn.QueryRow(context.Background(), "SELECT * FROM tb_user WHERE email=$1", email).Scan(
             &user.Id, &user.Name, &user.Email, &user.Password,
         )
         if err != nil {

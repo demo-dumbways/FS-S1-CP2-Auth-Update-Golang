@@ -10,7 +10,7 @@ Conditional rendering adalah proses merender/menampilkan komponen berdasarkan ko
 
 Hal pertama yang kita lakukan adalah mengirimkan `data session` saat proses render halaman blog melalui route `/blog`. Hal ini bertujuan agar nantinya dapat mengecek apakah terdapat data session atau tidak pada saat mengakses halaman blog.
 
-<a class="btn-example-code" href="https://github.com/demo-dumbways/ebook-code-result-chapter-2/blob/day6-8.conditional-rendering/api/index.js">
+<a class="btn-example-code" href="https://github.com/demo-dumbways/ebook-code-result-chapter-2-golang/blob/day6-6-conditional-rendering-button/main.go">
 Contoh code
 </a>
 
@@ -82,7 +82,7 @@ func blogs(w http.ResponseWriter, r *http.Request) {
 
 Selanjutnya kita akan melakukan proses pengecekan apakah pengguna memiliki session ketika mengakses halaman blog, jika memiliki session maka button akan ditampilkan
 
-<a class="btn-example-code" href="">
+<a class="btn-example-code" href="https://github.com/demo-dumbways/ebook-code-result-chapter-2-golang/blob/day6-6-conditional-rendering-button/views/blog.html">
 Contoh code
 </a>
 
